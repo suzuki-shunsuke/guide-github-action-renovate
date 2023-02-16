@@ -1,9 +1,5 @@
 # Detail
 
-1. Continous update by Renovate
-1. Automerge
-1. Test
-
 ## GitHub branch protection rule
 
 - [Managing a branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule)
@@ -14,6 +10,8 @@ At least, the following settings should be enabled.
 - `Require a pull request before merging`
 - `Require status checks to pass before merging`
   - `Status checks that are required.`: `status-check`
+
+The meaning of these settings is simple, **changes of the default branch must be tested**.
 
 `Status checks that are required.` is an essential setting.
 You can't merge a pull request whose `required jobs` fail,
@@ -66,13 +64,67 @@ e.g.
     if: needs.path-filter.outputs.renovate-config-validator == 'true'
 ```
 
+There are two exceptions of `one workflow`.
+
+1. `actionlint`: A workflow to run [actionlint](https://github.com/rhysd/actionlint)
+
+actionlint should be run in a dedicated workflow because if the workflow gets invalid actionlint isn't run and you can't find the issue.
+
+2. Workflows using [GitHub Actions Environment's Deployment branch](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches)
+
+## Continuous dependency update by Renovate
+
+It is important to keep dependencies up-to-date.
+If you don't update dependencies continuously, you would have the following issues.
+
+- You can't take any support from maintainers
+- You can't use new features
+- The behaviour of a old tool is different from the latest document
+- If you do a big update including a lot of changes, it is hard to check Release Notes, verify the update, solve the upgrading issues, and detect the root cause when any problem occurs after upgrading
+- The frequency of big updates is lower than the frequency of continuous updates, so it is difficult to keep the knowledge and improve the procedure
+
+On the other hand, if you keep dependencies up-to-date, you can solve the above issues.
+
+Renovate enables the continuous updates.
+Renovate supports various managers and datasources and flexible settings.
+You don't have to update dependencies manually.
+
+Renovate is awesome and can be introduced easily, but it isn't enough to just install Renovate.
+To utilize Renovate fully, you should not only tune Renovate settings but also configure GitHub Repository settings properly and tune GitHub Actions Workflows in accordance with Renovate.
+
+## Merge pull requests automatically
+
+Renovate would create many pull requests every day.
+It would be hard to review and merge all of them manually.
+You would be exhausted and frustrated, and finally pull requests would tend to be left.
+
+To solve the problem, you should merge pull requests from Renovate automatically.
+The burden of handling pull requests from Renovate would decrease and you would be able to focus on more essential tasks.
+
+## Exclude risky updates from automerge
+
+Some updates should be excluded from automerge.
+For example, major updates should be excluded from automerge basically (If you know the major update is safe, you would be able merge pull requests automatically).
+Renovate can enable or disable the automerge flexibly.
+
 ## GitHub auto-merge feature
 
 - [Automatically merging a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request)
 
-To merge a pull request safely, we enable GitHub auto-merge.
-A pull request should be merged 
+To merge a pull request safely, you should enable GitHub auto-merge.
+To use this feature, you have to configure the branch protection rule described above.
+Renovate supports the automerge, but using GitHub native auto-merge feature you can merge pull requests more quickly.
 
-## Unify GitHub Actions Workflows to one Workflow for branch protection rule
+## Test dependency updates by CI
 
+You should fix GitHub Actions Workflows to test dependency updates.
+Otherwise, you would miss bugs.
+Probably you already test updates your application depends on directly, but maybe you don't test updates workflows depend on.
 
+For example, when a tool for document generation is updated, the tool should be run in CI, and the document should be updated automatically or CI should fail if the document is changed.
+
+Automerge consists of CI's reliability. It is mandatory to test dependency updates by CI in order to enable automerge.
+
+## Protect Renovate pull request branches
+
+You should create a branch protection rule of Renovate's branches `renovate/*`.
