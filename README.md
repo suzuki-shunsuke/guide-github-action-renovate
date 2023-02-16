@@ -19,7 +19,7 @@ Guide for building `nice` GitHub Actions Workflows with Renovate
 
 ## Conclusion
 
-[Conclusion](docs/CONCLUSION.md)
+[Conclusion](docs/conclusion.md)
 
 ## Detail
 
