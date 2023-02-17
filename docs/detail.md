@@ -164,6 +164,7 @@ Otherwise, developers can push a malicious code to a Renovate pull request using
 GitHub App's private key must be managed with [GitHub Environment's Deployment branches and Environment secrets](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment).
 
 If you use GitHub Environment's Deployment branches, you have to create a GitHub Actions Workflow for it.
+We call this workflow `renovate` workflow.
 
 e.g.
 
@@ -196,3 +197,7 @@ jobs:
 
 To filter the workflow by pull request's head branch, you have to use `push` event instead of `pull_request` event.
 And to get the pull request information on `push` event you have to use [8BitJonny/gh-get-current-pr](https://github.com/8BitJonny/gh-get-current-pr) or similar action.
+
+As I mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged.
+To prevent a pull request that `renovate` workflow fails from being merged automatically, 
+
