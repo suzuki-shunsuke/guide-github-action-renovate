@@ -23,6 +23,10 @@ jobs:
         id: changes
         with:
           filters: |
+            update-aqua-checksums:
+              - aqua/aqua.yaml
+              - aqua/imports/*.yaml
+              - aqua/aqua-checksums.json
             renovate-config-validator:
               - renovate.json5
             ghalint:
@@ -44,8 +48,8 @@ jobs:
         id: generate_token
         uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1
         with:
-          app_id: ${{secrets.gh_app_id}}
-          private_key: ${{secrets.gh_app_private_key}}
+          app_id: ${{secrets.APP_ID}}
+          private_key: ${{secrets.APP_PRIVATE_KEY}}
       - run: gh -R "$GITHUB_REPOSITORY" pr merge --merge --auto --delete-branch "$PR_NUMBER"
         env:
           GITHUB_TOKEN: ${{steps.generate_token.outputs.token}} # Use GitHub App to trigger GitHub Actions Workflow by merge commit.
@@ -56,6 +60,7 @@ jobs:
     # If all dependent jobs succeed or are skipped this job succeeds.
     runs-on: ubuntu-latest
     needs:
+      - update-aqua-checksums
       - renovate-config-validator
       - ghalint
       - build
@@ -63,6 +68,21 @@ jobs:
     if: failure()
     steps:
       - run: exit 1
+
+  update-aqua-checksums:
+    # Update aqua-checksums.json and push a commit
+    needs: path-filter
+    if: needs.path-filter.outputs.update-aqua-checksums == 'true'
+    permissions:
+      contents: read # To checkout private repository
+    uses: aquaproj/update-checksum-workflow/.github/workflows/update-checksum.yaml@ce983a56c3dea928294a00d172ad1ec7253257a5 # v0.1.1
+    with:
+      aqua_policy_config: aqua/policy.yaml
+      aqua_version: v1.33.0
+      prune: true
+    secrets:
+      gh_app_id: ${{secrets.APP_ID}}
+      gh_app_private_key: ${{secrets.APP_PRIVATE_KEY}}
 
   renovate-config-validator:
     # Validate Renovate Configuration by renovate-config-validator.
