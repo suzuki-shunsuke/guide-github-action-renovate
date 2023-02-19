@@ -1,6 +1,10 @@
-# guide-github-action-renovate
+---
+sidebar_position: 100
+---
 
-Guide for building `nice` GitHub Actions Workflows with Renovate
+# Guide of GitHub Actions and Renovate
+
+Guide for building `nice` GitHub Actions Workflows with Renovate.
 
 `nice` means
 
@@ -19,12 +23,13 @@ Guide for building `nice` GitHub Actions Workflows with Renovate
 
 ## Summary
 
-[Summary](docs/summary.md)
+- [Summary for personal project](summary-personal-project.md)
+- [Summary for team development](summary-team-development.md)
 
 ## Detail
 
-[Detail](docs/detail.md)
+[Detail](detail.md)
 
 ## LICENSE
 
-[MIT](LICENSE)
+[MIT](https://github.com/suzuki-shunsuke/guide-github-action-renovate/blob/main/LICENSE)
