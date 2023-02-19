@@ -253,3 +253,23 @@ jobs:
 To approve a pull request, the approver must be a code owner but unfortunately GitHub App can't be a code owner.
 So you have to use a GitHub personal access token.
 You should create a bot account and create the user's [fine-grained personal access token](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/).
+
+## For public repository
+
+GitHub Actions workflows should pass even if a pull request is sent from a fork repository.
+A pull request from a fork repository can't access GitHub Secrets and `GITHUB_TOKEN` has only read permissions,
+so steps requiring secrets or write permissions should be skipped or fixed.
+
+Pull request from a fork repository:
+
+```yaml
+if: |
+  github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork
+```
+
+Other than pull request from a fork repository:
+
+```yaml
+if: |
+  github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork
+```

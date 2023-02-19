@@ -1,0 +1,54 @@
+# Summary - Team Development
+
+## Repository Setting
+
+- Allow auto-merge
+
+## Branch Protection Rules
+
+- `main`
+  - `Require a pull request before merging`
+    - `Require approvals` (1 approval)
+    - `Dismiss stale pull request approvals when new commits are pushed`
+    - `Require review from Code Owners`
+    - `Require approval of the most recent reviewable push`
+  - `Require status checks to pass before merging`
+    - `Status checks that are required.`: `status-check`
+  - `Do not allow bypassing the above settings`
+- `renovate/*` 
+  - `Do not allow bypassing the above settings`
+  - `Restrict who can push to matching branches`
+    - `Restrict pushes that create matching branches`
+      - `renovate`
+      - Dedicated GitHub App
+  - `Allow deletions`: Allow to delete pull request branches
+
+## GitHub App
+
+Create a GitHub App to push commits to Renovate branches.
+
+- Permissions
+  - `contents: write`
+    - Push a commit to a pull request
+    - Enable automerge
+  - `pull-requests: write`
+    - Enable Automerge
+
+## GitHub Environment
+
+[GitHub Environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
+
+- `renovate`
+  - deployment branch rule: `renovate/*`
+  - Secrets
+    - `APP_ID`: GitHub App ID
+    - `APP_PRIVATE_KEY`: GitHub App Private Key
+    - `GH_TOKEN_APPROVE_RENOVATE_PR`: personal access token to approve pull requests
+
+## GitHub Actions Workflows
+
+Create three workflows.
+
+- `test`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/test.yaml)
+- `renovate`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/renovate.yaml)
+- `actionlint`: [example](https://github.com/suzuki-shunsuke/tfcmt/blob/main/.github/workflows/actionlint.yaml)
