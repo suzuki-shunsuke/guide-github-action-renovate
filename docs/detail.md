@@ -109,19 +109,11 @@ You would be exhausted and frustrated, and finally pull requests would tend to b
 To solve the problem, you should merge pull requests from Renovate automatically.
 The burden of handling pull requests from Renovate would decrease and you would be able to focus on more essential tasks.
 
-## Exclude risky updates from automerge
+## Exclude risky updates from auto-merge
 
-Some updates should be excluded from automerge.
-For example, major updates should be excluded from automerge basically (If you know the major update is safe, you would be able merge pull requests automatically).
-Renovate can enable or disable the automerge flexibly.
-
-## Use GitHub auto-merge feature
-
-- [Automatically merging a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request)
-
-To merge a pull request safely, you should enable GitHub auto-merge.
-To use this feature, you have to configure the branch protection rule described above.
-Renovate supports the automerge, but using GitHub native auto-merge feature you can merge pull requests more quickly.
+Some updates should be excluded from auto-merge.
+For example, major updates should be excluded from auto-merge basically (If you know the major update is safe, you would be able merge pull requests automatically).
+Renovate can enable or disable the auto-merge flexibly.
 
 ## Test dependency updates by CI
 
@@ -131,7 +123,26 @@ Probably you already test updates your application depends on directly, but mayb
 
 For example, when a tool for document generation is updated, the tool should be run in CI, and the document should be updated automatically or CI should fail if the document is changed.
 
-Automerge consists of CI's reliability. It is mandatory to test dependency updates by CI in order to enable automerge.
+Automerge consists of CI's reliability. It is mandatory to test dependency updates by CI in order to enable auto-merge.
+
+## Use GitHub auto-merge feature
+
+- [Automatically merging a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request)
+
+To merge a pull request safely, you should enable GitHub auto-merge.
+To use this feature, you have to configure the branch protection rule described above.
+Renovate supports the auto-merge, but using GitHub native auto-merge feature you can merge pull requests more quickly.
+
+## Enable auto-merge by GitHub Actions
+
+Renovate supports [platformAutomerge](https://docs.renovatebot.com/configuration-options/#platformautomerge) enabling GitHub `auto-merge` automatically, but there are some issues.
+
+- `platformAutomerge` works only when the pull request is initially created
+- `platformAutomerge` enables auto-merge regardless the result of GitHub Actions Workflows
+
+So you should enable auto-merge by GitHub Actions without platformAutomerge.
+
+Please see [Enable GitHub auto-merge in renovate workflow](#enable-github-auto-merge-in-renovate-workflow) too.
 
 ## For team development
 
@@ -186,11 +197,11 @@ on:
 jobs:
   get-pr:
     # Get data regarding a pull request associated with the current commit.
-    # This is used to approve the pull request and enable automerge.
+    # This is used to approve the pull request and enable auto-merge.
     runs-on: ubuntu-latest
     outputs:
       found: ${{steps.pr.outputs.pr_found}}
-      # Check if Renovate's automerge is enabled
+      # Check if Renovate's auto-merge is enabled
       automerge: "${{contains(steps.pr.outputs.pr_body, ' **Automerge**: Enabled.')}}"
       number: ${{steps.pr.outputs.number}}
     permissions: {}
@@ -207,11 +218,11 @@ jobs:
 To filter the workflow by pull request's head branch, you have to use `push` event instead of `pull_request` event.
 And to get the pull request information on `push` event you have to use [8BitJonny/gh-get-current-pr](https://github.com/8BitJonny/gh-get-current-pr) or similar action.
 
-#### Enable GitHub automerge in `renovate` workflow
+#### Enable GitHub auto-merge in `renovate` workflow
 
 As I mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged. Renovate's [platformAutomerge](https://docs.renovatebot.com/configuration-options/#platformautomerge) is danger because pull request could be merged regardless the result of `renovate` workflow.
 
-To prevent a pull request that `renovate` workflow fails from being merged automatically, you should enable automerge in `renovate` workflow.
+To prevent a pull request that `renovate` workflow fails from being merged automatically, you should enable auto-merge in `renovate` workflow.
 
 e.g.
 
@@ -219,7 +230,7 @@ e.g.
 jobs:
   get-pr:
     # Get data regarding a pull request associated with the current commit.
-    # This is used to approve the pull request and enable automerge.
+    # This is used to approve the pull request and enable auto-merge.
     runs-on: ubuntu-latest
     outputs:
       found: ${{steps.pr.outputs.pr_found}}
@@ -259,6 +270,8 @@ So you have to use a GitHub personal access token.
 You should create a bot account and create the user's [fine-grained personal access token](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/).
 
 ## For public repository
+
+### Support pull requests from fork repositories
 
 GitHub Actions workflows should pass even if a pull request is sent from a fork repository.
 A pull request from a fork repository can't access GitHub Secrets and `GITHUB_TOKEN` has only read permissions,
