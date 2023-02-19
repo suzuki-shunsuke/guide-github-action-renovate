@@ -27,6 +27,13 @@ sidebar_position: 500
       - Dedicated GitHub App
   - `Allow deletions`: Allow to delete pull request branches
 
+## Personal Access Token
+
+You should use [fine-grained personal access token](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) rather than legacy access token.
+
+- Permissions:
+  - `pull-requests: write`: To approve a pull request
+
 ## GitHub App
 
 Create a GitHub App to push commits to Renovate branches.
@@ -36,7 +43,7 @@ Create a GitHub App to push commits to Renovate branches.
     - Push a commit to a pull request
     - Enable automerge
   - `pull-requests: write`
-    - Enable Automerge
+    - Enable automerge
 
 ## GitHub Environment
 
