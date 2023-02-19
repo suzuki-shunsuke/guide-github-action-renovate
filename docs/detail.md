@@ -1,3 +1,7 @@
+---
+sidebar_position: 200
+---
+
 # Detail
 
 ## Create a GitHub branch protection rule of the default branch

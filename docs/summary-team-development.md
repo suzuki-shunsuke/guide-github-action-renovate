@@ -1,3 +1,7 @@
+---
+sidebar_position: 500
+---
+
 # Summary - Team Development
 
 ## Repository Setting
