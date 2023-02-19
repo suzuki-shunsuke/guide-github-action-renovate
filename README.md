@@ -17,9 +17,9 @@ Guide for building `nice` GitHub Actions Workflows with Renovate
   - Prevent Renovate and the automerge feature from being abused
     - Prevent malicious changes from being merged without review
 
-## Conclusion
+## Summary
 
-[Conclusion](docs/conclusion.md)
+[Summary](docs/summary.md)
 
 ## Detail
 
