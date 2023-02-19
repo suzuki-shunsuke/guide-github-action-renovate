@@ -21,6 +21,10 @@ Guide for building `nice` GitHub Actions Workflows with Renovate.
   - Prevent Renovate and the automerge feature from being abused
     - Prevent malicious changes from being merged without review
 
+Renovate is awesome and can be introduced easily, but it isn't enough to just install Renovate. To utilize Renovate fully, you should not only tune Renovate settings but also configure GitHub Repository settings properly and tune GitHub Actions Workflows in accordance with Renovate.
+
+In this document we describe how to build nice GitHub Actions Workflows in accordance with Renovate.
+
 ## Summary
 
 `Summary` summarizes the settings for `nice` GitHub Actions Workflows.

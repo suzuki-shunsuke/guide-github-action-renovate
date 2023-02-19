@@ -229,7 +229,7 @@ And to get the pull request information on `push` event you have to use [8BitJon
 
 ### Enable GitHub auto-merge in `renovate` workflow
 
-As I mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged.
+As we mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged.
 
 To prevent a pull request from being merged automatically when `renovate` workflow fails, you should enable auto-merge in `renovate` workflow.
 
@@ -280,7 +280,7 @@ You should create a bot account and create the user's [fine-grained personal acc
 
 ### :bulb: Consider self-hosted runner to save money
 
-As I mentioned above, you have to run some additional jobs.
+As we mentioned above, you have to run some additional jobs.
 
 - `status-check`
 - `path-filter`
