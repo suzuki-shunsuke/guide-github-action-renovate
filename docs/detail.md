@@ -83,7 +83,7 @@ actionlint should be run in a dedicated workflow because if the workflow gets in
 ## Update dependencies continuously by Renovate
 
 It is important to keep dependencies up-to-date.
-If you don't update dependencies continuously, you would have the following issues.
+If you don't update dependencies continuously, you would face the following issues.
 
 - You can't take any support from maintainers
 - You can't use new features
@@ -92,10 +92,7 @@ If you don't update dependencies continuously, you would have the following issu
 - The frequency of big updates is lower than the frequency of continuous updates, so it is difficult to keep the knowledge and improve the procedure
 
 On the other hand, if you keep dependencies up-to-date, you can solve the above issues.
-
 Renovate enables the continuous updates.
-Renovate supports various managers and datasources and flexible settings.
-You don't have to update dependencies manually.
 
 Renovate is awesome and can be introduced easily, but it isn't enough to just install Renovate.
 To utilize Renovate fully, you should not only tune Renovate settings but also configure GitHub Repository settings properly and tune GitHub Actions Workflows in accordance with Renovate.
@@ -111,15 +108,21 @@ The burden of handling pull requests from Renovate would decrease and you would 
 
 ## Exclude risky updates from auto-merge
 
-Some updates should be excluded from auto-merge.
-For example, major updates should be excluded from auto-merge basically (If you know the major update is safe, you would be able merge pull requests automatically).
+Some updates should not be merged automatically.
+For example, normally major updates should not be merged automatically (If you know the major update is safe, you would be able merge pull requests automatically).
 Renovate can enable or disable the auto-merge flexibly.
+
+## Spread the target of auto-merge gradually
+
+If you hesitate to enable auto-merge, you can also enable auto-merge against only specific packages.
+After that, you would understand the benefit of auto-merge and would like to merge more pull requests automatically.
+Then you can spread the target of auto-merge gradually.
 
 ## Test dependency updates by CI
 
 Depency updates should be tested by CI.
 Otherwise, you would miss bugs.
-Probably you already test updates your application depends on directly, but maybe you don't test updates workflows depend on.
+Probably you already test updates your application depends on directly, but maybe you don't test other updates.
 
 For example, when a tool for document generation is updated, the tool should be run in CI, and the document should be updated automatically or CI should fail if the document is changed.
 
@@ -226,9 +229,9 @@ And to get the pull request information on `push` event you have to use [8BitJon
 
 ### Enable GitHub auto-merge in `renovate` workflow
 
-As I mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged. Renovate's [platformAutomerge](https://docs.renovatebot.com/configuration-options/#platformautomerge) is danger because pull request could be merged regardless the result of `renovate` workflow.
+As I mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged.
 
-To prevent a pull request that `renovate` workflow fails from being merged automatically, you should enable auto-merge in `renovate` workflow.
+To prevent a pull request from being merged automatically when `renovate` workflow fails, you should enable auto-merge in `renovate` workflow.
 
 e.g.
 
