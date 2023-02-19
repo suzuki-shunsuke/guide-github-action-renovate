@@ -6,6 +6,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
       - name: get nested property
@@ -31,6 +32,5 @@ jobs:
       - uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ steps.generate_token.outputs.token }}
-          external_repository: suzuki-shunsuke/tfcmt
           publish_dir: ./build
           destination_dir: ./docs
