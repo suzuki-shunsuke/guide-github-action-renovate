@@ -23,12 +23,14 @@ Guide for building `nice` GitHub Actions Workflows with Renovate.
 
 ## Summary
 
+`Summary` summarizes the settings for `nice` GitHub Actions Workflows.
+
 - [Summary for personal project](summary-personal-project.md)
 - [Summary for team development](summary-team-development.md)
 
 ## Detail
 
-[Detail](detail.md)
+[Detail](detail.md) describes the detail of how you build `nice` GitHub Actions Workflows with Renovate.
 
 ## LICENSE
 
