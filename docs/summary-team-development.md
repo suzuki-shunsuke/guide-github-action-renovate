@@ -57,7 +57,7 @@ If `workflows: write` is missing, auto-merge is disabled.
 [GitHub Environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
 
 - `renovate`
-  - deployment branch rule: `renovate/*`
+  - deployment branch rule: `renovate/*`, `main`
   - Secrets
     - `APP_ID`: GitHub App ID
     - `APP_PRIVATE_KEY`: GitHub App Private Key
@@ -69,3 +69,4 @@ Create three workflows.
 
 - `test`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/test.yaml)
 - `actionlint`: [example](https://github.com/suzuki-shunsuke/tfcmt/blob/main/.github/workflows/actionlint.yaml)
+- `update-branch`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/update-branch.yaml)
