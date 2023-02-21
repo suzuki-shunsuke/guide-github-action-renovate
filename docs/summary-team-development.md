@@ -49,7 +49,7 @@ Create a GitHub App to push commits to Renovate branches and enable auto-merge.
 
 If `workflows: write` is missing, auto-merge is disabled.
 
-> auto-merge was automatically disabled 8 minutes ago
+> auto-merge was automatically disabled 8 minutes ago  
 > Tried to create or update workflow without `workflows` permission
 
 ## GitHub Environment
