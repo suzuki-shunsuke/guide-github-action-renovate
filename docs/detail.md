@@ -23,6 +23,8 @@ The meaning of these settings is simple, **changes of the default branch must be
 You can't merge a pull request whose `required jobs` fail,
 but in other words you can merge a pull request even if jobs other than `required jobs` fail. This is undesirable.
 
+If you add jobs to `Status checks that are required.`, it is inconvenient when you add a new job to the workflow and `Status checks that are required.` or change job names because until you merge a pull request to add a new job to the workflow you can't merge other pull requests.
+
 So you should define a dedicated job and adding only the job to `Status checks that are required.`.
 We call this job `status-check` job.
 
@@ -72,13 +74,11 @@ e.g.
     if: needs.path-filter.outputs.renovate-config-validator == 'true'
 ```
 
-There are two exceptions of `one workflow`.
+There are an exception of `one workflow`.
 
 1. `actionlint`: A workflow to run [actionlint](https://github.com/rhysd/actionlint)
 
 actionlint should be run in a dedicated workflow because if the workflow gets invalid actionlint isn't run and you can't find the issue.
-
-2. Workflows using [GitHub Actions Environment's Deployment branch](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches)
 
 ## Update dependencies continuously by Renovate
 
@@ -192,91 +192,39 @@ Otherwise, developers can push a malicious code to a Renovate pull request using
 
 GitHub App's private key must be managed with [GitHub Environment's Deployment branches and Environment secrets](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment).
 
-If you use GitHub Environment's Deployment branches, you have to create a GitHub Actions Workflow for it.
-We call this workflow `renovate` workflow.
-
-e.g.
-
 ```yaml
-name: renovate
-on:
-  push: # Use push event instead of pull_request event to filter events by pull request's head branch
-    branches:
-      - "renovate/**" # This workflow is triggered only by Renovate pull request
-jobs:
-  get-pr:
-    # Get data regarding a pull request associated with the current commit.
-    # This is used to approve the pull request and enable auto-merge.
-    runs-on: ubuntu-latest
-    outputs:
-      found: ${{steps.pr.outputs.pr_found}}
-      # Check if Renovate's auto-merge is enabled
-      automerge: "${{contains(steps.pr.outputs.pr_body, ' **Automerge**: Enabled.')}}"
-      number: ${{steps.pr.outputs.number}}
-    permissions: {}
-    steps:
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
-        id: pr
-
-  update-aqua-checksums-renovate:
-    runs-on: ubuntu-latest
-    environment: renovate # Use GitHub Environment secrets
-    # ...
-```
-
-To filter the workflow by pull request's head branch, you have to use `push` event instead of `pull_request` event.
-And to get the pull request information on `push` event you have to use [8BitJonny/gh-get-current-pr](https://github.com/8BitJonny/gh-get-current-pr) or similar action.
-
-### Enable GitHub auto-merge in `renovate` workflow
-
-As we mentioned above, jobs of `renovate` workflow can't be added to `Status checks that are required.`, so even if this workflow fails a pull request could be merged.
-
-To prevent a pull request from being merged automatically when `renovate` workflow fails, you should enable auto-merge in `renovate` workflow.
-
-e.g.
-
-```yaml
-jobs:
-  get-pr:
-    # Get data regarding a pull request associated with the current commit.
-    # This is used to approve the pull request and enable auto-merge.
-    runs-on: ubuntu-latest
-    outputs:
-      found: ${{steps.pr.outputs.pr_found}}
-      # Check if Renovate's automerge is enabled
-      automerge: "${{contains(steps.pr.outputs.pr_body, ' **Automerge**: Enabled.')}}"
-      number: ${{steps.pr.outputs.number}}
-    permissions: {}
-    steps:
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
-        id: pr
-
-  auto-approve:
-    # approve pull requests from Renovate automatically
+  approve-and-enable-automerge-renovate:
     runs-on: ubuntu-latest
     environment: renovate
-    needs: get-pr
     if: |
-      needs.get-pr.outputs.found == 'true' && needs.get-pr.outputs.automerge == 'true'
-    permissions: {}
+      github.event.pull_request.user.login == 'renovate[bot]' && contains(github.event.pull_request.body, ' **Automerge**: Enabled.')
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1
+        with:
+          app_id: ${{secrets.APP_ID}}
+          private_key: ${{secrets.APP_PRIVATE_KEY}}
+      - name: Enable auto-merge
+        run: gh -R "$GITHUB_REPOSITORY" pr merge --merge --auto --delete-branch "$PR_NUMBER"
+        env:
+          # github.token is unavailable, because github.token doesn't have a permission to delete a branch `renovate/*`
+          GITHUB_TOKEN: ${{steps.generate_token.outputs.token}}
+          PR_NUMBER: ${{github.event.pull_request.number}}
       # https://github.com/cli/cli/issues/6680
       # HTTP 401: Personal access tokens with fine grained access do not support the GraphQL API (https://api.github.com/graphql)
       # - run: gh -R aquaproj/example-update-checksum pr review -a "$PR_NUMBER"
-      - run: |
+      - name: Approve a pull request
+        run: |
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/reviews" \
             -f event='APPROVE'
         env:
-          PR_NUMBER: ${{needs.get-pr.outputs.number}}
+          PR_NUMBER: ${{github.event.pull_request.number}}
           GITHUB_TOKEN: ${{secrets.GH_TOKEN_APPROVE_RENOVATE_PR}}
 ```
-
-To approve a pull request, the approver must be a code owner but unfortunately GitHub App can't be a code owner.
-So you have to use a GitHub personal access token.
-You should create a bot account and create the user's [fine-grained personal access token](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/).
 
 ### :bulb: Consider self-hosted runner to save money
 
@@ -284,9 +232,7 @@ As we mentioned above, you have to run some additional jobs.
 
 - `status-check`
 - `path-filter`
-- `get-pr`
-- `auto-approve`
-- `enable-automerge`
+- `approve-and-enable-automerge-approve`
 
 But maybe you don't want to run these jobs to save the billing for GitHub Actions.
 
