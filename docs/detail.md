@@ -51,7 +51,7 @@ e.g.
 
 If a workflow is run only when specific files are changed, you can't add the workflow's jobs to `Status checks that are required.`, so even if the workflow fails you can merge a pull request. This is undesirable.
 
-To solve the issue, you should merge the workflow to one workflow which is always triggered and add jobs to `status-check` job's `needes`. And to run jobs only when specific files are changed, you should use [dorny/paths-filter](https://github.com/dorny/paths-filter) or similar action.
+To solve the issue, you should merge the workflow to one workflow which is always triggered and add jobs to `status-check` job's `needes`. We call this workflow `one workflow`. And to run jobs only when specific files are changed, you should use [dorny/paths-filter](https://github.com/dorny/paths-filter) or similar action.
 
 e.g.
 
@@ -155,7 +155,7 @@ Please see [Enable GitHub auto-merge in renovate workflow](#enable-github-auto-m
 
 ## For team development
 
-If you maintain a repository with other team members, which means multiple users have the write permission, some additional settings are required.
+If you maintain a repository with other team members, which means multiple developers have the write permission, some additional settings are required.
 
 ### Configure a branch protection rule of the default branch to enforce the review
 
@@ -181,6 +181,9 @@ You should create a branch protection rule of Renovate's branches `renovate/*`.
 
 You should forbid developers to push a commit to Renovate branches.
 Otherwise, developers can push malicious code to a pull request of Renovate and can approve and merge the pull request.
+Even if `Require approval of the most recent reviewable push` is enabled, developers still can push malicious code.
+
+If you want to add changes to a Renovate pull request, you should create a new pull request. You may feel bothersome, but you have no choice.
 
 ### Create a dedicated GitHub App to push commits to a Renovate pull request
 
@@ -225,6 +228,22 @@ GitHub App's private key must be managed with [GitHub Environment's Deployment b
           PR_NUMBER: ${{github.event.pull_request.number}}
           GITHUB_TOKEN: ${{secrets.GH_TOKEN_APPROVE_RENOVATE_PR}}
 ```
+
+### (Optional) Update branch of Renovate pull request by comment
+
+Developers can't update branch of Renovate pull requests due to the branch protection rule.
+Renovate supports rebasing branch but sometimes you would like to update branch.
+You can update branch of Renovate pull request by adding a GitHub Actions Workflow.
+This workflow is triggered by pull request comment and updates branch by GitHub API.
+
+[example workflow](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/update-branch.yaml)
+
+![image](https://user-images.githubusercontent.com/13323303/220363572-3d56aedf-7a09-44b8-bb34-e946f74e5b7b.png)
+
+We call this workflow `update-branch workflow`.
+This workflow is optional because Renovate supports rebasing branch.
+
+To use this workflow, you must allow the default branch to access GitHub App Private Key to push commits to Renovate branch because [issue_comment event](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#issue_comment) is triggered at the default branch.
 
 ### :bulb: Consider self-hosted runner to save money
 
