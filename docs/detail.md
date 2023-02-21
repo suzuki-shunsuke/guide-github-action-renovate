@@ -23,6 +23,8 @@ The meaning of these settings is simple, **changes of the default branch must be
 You can't merge a pull request whose `required jobs` fail,
 but in other words you can merge a pull request even if jobs other than `required jobs` fail. This is undesirable.
 
+If you add jobs to `Status checks that are required.`, it is inconvenient when you add a new job to the workflow and `Status checks that are required.` or change job names because until you merge a pull request to add a new job to the workflow you can't merge other pull requests.
+
 So you should define a dedicated job and adding only the job to `Status checks that are required.`.
 We call this job `status-check` job.
 

@@ -36,14 +36,21 @@ You should use [fine-grained personal access token](https://github.blog/2022-10-
 
 ## GitHub App
 
-Create a GitHub App to push commits to Renovate branches.
+Create a GitHub App to push commits to Renovate branches and enable auto-merge.
 
 - Permissions
   - `contents: write`
     - Push a commit to a pull request
-    - Enable automerge
+    - Enable auto-merge
   - `pull-requests: write`
-    - Enable automerge
+    - Enable auto-merge
+  - `workflows: write`
+    - Enable auto-merge of pull requests updating GitHub Actions Workflows
+
+If `workflows: write` is missing, auto-merge is disabled.
+
+> auto-merge was automatically disabled 8 minutes ago
+> Tried to create or update workflow without `workflows` permission
 
 ## GitHub Environment
 
@@ -61,5 +68,4 @@ Create a GitHub App to push commits to Renovate branches.
 Create three workflows.
 
 - `test`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/test.yaml)
-- `renovate`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/renovate.yaml)
 - `actionlint`: [example](https://github.com/suzuki-shunsuke/tfcmt/blob/main/.github/workflows/actionlint.yaml)
