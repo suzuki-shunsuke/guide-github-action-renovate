@@ -232,7 +232,7 @@ As we mentioned above, you have to run some additional jobs.
 
 - `status-check`
 - `path-filter`
-- `approve-and-enable-automerge-approve`
+- `approve-and-enable-automerge-renovate`
 
 But maybe you don't want to run these jobs to save the billing for GitHub Actions.
 
