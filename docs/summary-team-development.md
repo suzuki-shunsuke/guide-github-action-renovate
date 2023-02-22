@@ -57,11 +57,15 @@ If `workflows: write` is missing, auto-merge is disabled.
 [GitHub Environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
 
 - `renovate`
-  - deployment branch rule: `renovate/*`, `main`
+  - deployment branch rule: `renovate/*`, `main` (`main` is optional)
   - Secrets
     - `APP_ID`: GitHub App ID
     - `APP_PRIVATE_KEY`: GitHub App Private Key
     - `GH_TOKEN_APPROVE_RENOVATE_PR`: personal access token to approve pull requests
+
+:::tip
+`main` is optional but required to [support updating Renovate branches by pull request comment](detail.md#optional-update-branch-of-renovate-pull-request-by-comment).
+:::
 
 ## GitHub Actions Workflows
 
@@ -69,4 +73,8 @@ Create three workflows.
 
 - `test`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/test.yaml)
 - `actionlint`: [example](https://github.com/suzuki-shunsuke/tfcmt/blob/main/.github/workflows/actionlint.yaml)
-- `update-branch`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/update-branch.yaml)
+- (Optional) `update-branch`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/update-branch.yaml)
+
+:::tip
+`update-branch` is optional but required to [support updating Renovate branches by pull request comment](detail.md#optional-update-branch-of-renovate-pull-request-by-comment).
+:::
