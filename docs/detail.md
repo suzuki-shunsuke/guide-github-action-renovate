@@ -25,6 +25,8 @@ but in other words you can merge a pull request even if jobs other than `require
 
 If you add jobs to `Status checks that are required.`, it is inconvenient when you add a new job to the workflow and `Status checks that are required.` or change job names because until you merge a pull request to add a new job to the workflow you can't merge other pull requests.
 
+Futhermore, if you don't have the permission to change GitHub Repository Settings and you have to ask someone to change them, it would be inconvenient.
+
 So you should define a dedicated job and adding only the job to `Status checks that are required.`.
 We call this job `status-check` job.
 
@@ -171,13 +173,16 @@ This settings means **a pull request must be reviewed by at least one Code Owner
 
 You should create a branch protection rule of Renovate's branches `renovate/*`.
 
-- `renovate/*` 
+- `renovate/*`
   - `Do not allow bypassing the above settings`
   - `Restrict who can push to matching branches`
     - `Restrict pushes that create matching branches`
       - `renovate`
       - Dedicated GitHub App
-  - `Allow deletions`
+  - `Allow deletions`: To allow Renovate to delete branches
+  - `Allow force pushes`: To allow Renovate to rebase branches
+    - `Specify who can force push`
+      - `renovate`
 
 You should forbid developers to push a commit to Renovate branches.
 Otherwise, developers can push malicious code to a pull request of Renovate and can approve and merge the pull request.
