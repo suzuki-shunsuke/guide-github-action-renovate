@@ -26,6 +26,9 @@ sidebar_position: 500
       - `renovate`
       - Dedicated GitHub App
   - `Allow deletions`: Allow to delete pull request branches
+  - `Allow force pushes`: Allow Renovate to rebase branches
+    - `Specify who can force push`
+      - `renovate`
 
 ## Personal Access Token
 
