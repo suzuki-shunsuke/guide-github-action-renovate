@@ -49,6 +49,41 @@ e.g.
       - run: exit 1
 ```
 
+:::caution
+You can't merge `status-check` job and a job to enable auto-merge and approve a pull request.
+
+<details>
+<summary>Example</summary>
+
+```yaml
+  status-check:
+    runs-on: ubuntu-latest
+    needs:
+      - update-aqua-checksums
+      - test
+      - renovate-config-validator
+    permissions: {}
+    if: |
+      ! failure() && ! cancelled() && github.event.pull_request.user.login == 'renovate[bot]' && contains(github.event.pull_request.body, ' **Automerge**: Enabled.')
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1
+        with:
+          app_id: ${{secrets.gh_app_id}}
+          private_key: ${{secrets.gh_app_private_key}}
+      - run: gh -R "$GITHUB_REPOSITORY" pr merge --merge --auto --delete-branch "$PR_NUMBER"
+        env:
+          GITHUB_TOKEN: ${{steps.generate_token.outputs.token}} # Use GitHub App to trigger GitHub Actions Workflow by merge commit.
+          PR_NUMBER: ${{github.event.pull_request.number}}
+      # ...
+```
+
+</details>
+
+The issue of this example is that `status-check` is skipped when some of needs jobs fails so you can merge the pull request unexpectedly.
+:::
+
 ## Merge GitHub Actions workflows to one workfklow for status check
 
 If a workflow is run only when specific files are changed, you can't add the workflow's jobs to `Status checks that are required.`, so even if the workflow fails you can merge a pull request. This is undesirable.
