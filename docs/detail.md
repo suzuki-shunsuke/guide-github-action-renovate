@@ -84,11 +84,11 @@ You can't merge `status-check` job and a job to enable auto-merge and approve a 
 The issue of this example is that `status-check` is skipped when some of needs jobs fails so you can merge the pull request unexpectedly.
 :::
 
-## Merge GitHub Actions workflows to one workfklow for status check
+## Merge GitHub Actions workflows for `pull_request` event to one workfklow for status check
 
 If a workflow is run only when specific files are changed, you can't add the workflow's jobs to `Status checks that are required.`, so even if the workflow fails you can merge a pull request. This is undesirable.
 
-To solve the issue, you should merge the workflow to one workflow which is always triggered and add jobs to `status-check` job's `needes`. We call this workflow `one workflow`. And to run jobs only when specific files are changed, you should use [dorny/paths-filter](https://github.com/dorny/paths-filter) or similar action.
+To solve the issue, you should merge workflows for `pull_request` event to one workflow which is always triggered and add jobs to `status-check` job's `needes`. We call this workflow `one workflow`. And to run jobs only when specific files are changed, you should use [dorny/paths-filter](https://github.com/dorny/paths-filter) or similar action.
 
 e.g.
 
@@ -116,6 +116,8 @@ There are an exception of `one workflow`.
 1. `actionlint`: A workflow to run [actionlint](https://github.com/rhysd/actionlint)
 
 actionlint should be run in a dedicated workflow because if the workflow gets invalid actionlint isn't run and you can't find the issue.
+
+If you want to trigger the workflow by not only `pull_request` event but also other events, please change the workflow to a Reusable Workflow and share the workflow with multiple workflows.
 
 ## Update dependencies continuously by Renovate
 
