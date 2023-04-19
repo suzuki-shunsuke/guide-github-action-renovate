@@ -2,7 +2,7 @@
 sidebar_position: 400
 ---
 
-# Summary - Personal Project
+# Settings for Personal Project
 
 ## Repository Setting
 

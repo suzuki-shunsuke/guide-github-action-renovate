@@ -2,7 +2,7 @@
 sidebar_position: 500
 ---
 
-# Summary - Team Development
+# Settings for Team Development
 
 ## Repository Setting
 
@@ -67,7 +67,7 @@ If `workflows: write` is missing, auto-merge is disabled.
     - `GH_TOKEN_APPROVE_RENOVATE_PR`: personal access token to approve pull requests
 
 :::tip
-`main` is optional but required to [support updating Renovate branches by pull request comment](detail.md#optional-update-branch-of-renovate-pull-request-by-comment).
+`main` is optional but required to [support updating Renovate branches by pull request comment](guide.md#optional-update-branch-of-renovate-pull-request-by-comment).
 :::
 
 ## GitHub Actions Workflows
@@ -79,5 +79,5 @@ Create three workflows.
 - (Optional) `update-branch`: [example](https://github.com/aquaproj/example-update-checksum/blob/main/.github/workflows/update-branch.yaml)
 
 :::tip
-`update-branch` is optional but required to [support updating Renovate branches by pull request comment](detail.md#optional-update-branch-of-renovate-pull-request-by-comment).
+`update-branch` is optional but required to [support updating Renovate branches by pull request comment](guide.md#optional-update-branch-of-renovate-pull-request-by-comment).
 :::

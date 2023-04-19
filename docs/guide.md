@@ -2,7 +2,7 @@
 sidebar_position: 200
 ---
 
-# Detail
+# Guide
 
 ## Create a GitHub branch protection rule of the default branch
 

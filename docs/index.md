@@ -4,9 +4,7 @@ sidebar_position: 100
 
 # Guide of GitHub Actions and Renovate
 
-Guide for building `nice` GitHub Actions Workflows with Renovate.
-
-`nice` means
+Guide for building `good` GitHub Actions Workflows with Renovate.
 
 - Automated
   - Automerge almost pull requests by Renovate
@@ -23,18 +21,14 @@ Guide for building `nice` GitHub Actions Workflows with Renovate.
 
 Renovate is awesome and can be introduced easily, but it isn't enough to just install Renovate. To utilize Renovate fully, you should not only tune Renovate settings but also configure GitHub Repository settings properly and tune GitHub Actions Workflows in accordance with Renovate.
 
-In this document we describe how to build nice GitHub Actions Workflows in accordance with Renovate.
+In this document we describe how to build good GitHub Actions Workflows in accordance with Renovate.
 
-## Summary
+## Index
 
-`Summary` summarizes the settings for `nice` GitHub Actions Workflows.
-
-- [Summary for personal project](summary-personal-project.md)
-- [Summary for team development](summary-team-development.md)
-
-## Detail
-
-[Detail](detail.md) describes the detail of how you build `nice` GitHub Actions Workflows with Renovate.
+- [Guide](guide.md)
+- Settings
+  - [Settings for personal project](settings-personal-project.md)
+  - [Settings for team development](settings-team-development.md)
 
 ## LICENSE
 

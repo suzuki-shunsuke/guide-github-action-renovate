@@ -4,6 +4,11 @@ sidebar_position: 600
 
 # Changelog
 
+## 2023-04-05
+
+Fix `renovate/*`'s branch protection rules.
+Enable `Allow force pushes` to allow Renovate to rebase branches.
+
 ## 2023-02-21
 
 ### Merge `renovate` workflow to `one` workflow
@@ -23,8 +28,3 @@ If GitHub Apps doesn't have a permission `workflows: write`, GitHub Apps can't e
 ### Support updating branch by pull request comment
 
 - Add a workflow `update-branch`
-
-## 2023-04-05
-
-Fix `renovate/*`'s branch protection rules.
-Enable `Allow force pushes` to allow Renovate to rebase branches.
