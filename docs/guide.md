@@ -192,6 +192,109 @@ https://docs.github.com/en/actions/security-guides/automatic-token-authenticatio
 
 Please see [Enable GitHub auto-merge in renovate workflow](#enable-github-auto-merge-in-renovate-workflow) too.
 
+## Split the workflow by reusable workflows for better path filters
+
+<details>
+<summary>Example</summary>
+
+```
+.github/workflows/
+  test.yaml
+  wc-renovate-config-validator.yaml
+  wc-ghalint.yaml
+```
+
+.github/workflows/test.yaml
+
+```yaml
+jobs:
+  path-filter:
+    # Get changed files to filter jobs
+    outputs:
+      renovate-config-validator: ${{steps.changes.outputs.renovate-config-validator}}
+      ghalint: ${{steps.changes.outputs.ghalint}}
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
+        id: changes
+        with:
+          filters: |
+            renovate-config-validator:
+              - renovate.json5
+              - .github/workflows/test.yaml
+              - .github/workflows/wc-renovate-config-validator.yaml
+            ghalint:
+              - .github/workflows/*.yaml
+              - aqua/aqua.yaml
+              - aqua/imports/ghalint.yaml
+              - ghalint.yaml
+
+  renovate-config-validator:
+    uses: ./.github/workflows/wc-renovate-config-validator.yaml
+    needs: path-filter
+    if: needs.path-filter.outputs.renovate-config-validator == 'true'
+    permissions:
+      contents: read
+
+  ghalint:
+    needs: path-filter
+    if: needs.path-filter.outputs.ghalint == 'true'
+    uses: ./.github/workflows/wc-ghalint.yaml
+    permissions: {}
+```
+
+.github/workflows/wc-renovate-config-validator.yaml
+
+```yaml
+name: renovate-config-validator
+on: workflow_call
+jobs:
+  renovate-config-validator:
+    # Validate Renovate Configuration by renovate-config-validator.
+    uses: suzuki-shunsuke/renovate-config-validator-workflow/.github/workflows/validate.yaml@1a2fd7b15d99b1c434124b0bd2d8bd55b54ed869 # v0.2.0
+    permissions:
+      contents: read
+```
+
+.github/workflows/wc-ghalint.yaml
+
+```yaml
+name: ghalint
+on: workflow_call
+env:
+  AQUA_LOG_COLOR: always
+jobs:
+  ghalint:
+    # Validate GitHub Actions Workflows by ghalint.
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: aquaproj/aqua-installer@294926f94b4233f202a2f03875c604f840cfed70 # v2.1.1
+        with:
+          aqua_version: v2.3.6
+        env:
+          AQUA_GITHUB_TOKEN: ${{github.token}}
+      - run: ghalint run
+        env:
+          GHALINT_LOG_COLOR: always
+          AQUA_GITHUB_TOKEN: ${{github.token}}
+```
+
+</details>
+
+In the above example, jobs `ghalint` and `renovate-config-validator` are separated from the workflow file `test`.
+The benefit of the saparation is the following things.
+
+1. Enable jobs to be called by other workflows
+1. Improve the maintainability by making the workflow file small
+1. Enable to run only a specific job when the job file is changed
+
+Especially, 3 `Enable to run only a specific job when the job file is changed` is important.
+If the job is changed the job should be tested.
+If the file `.github/workflows/wc-renovate-config-validator.yaml` is changed, you can run only the job `renovate-config-validator` by path filter. If the file isn't separated, you have to run all jobs in the `test` workflow if the job `renovate-config-validator` is changed.
+
 ## For team development
 
 If you maintain a repository with other team members, which means multiple developers have the write permission, some additional settings are required.
