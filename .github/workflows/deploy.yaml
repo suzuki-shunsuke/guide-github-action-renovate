@@ -28,6 +28,14 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          permissions: >-
+            {
+              "contents": "write"
+            }
+          repositories: >-
+            [
+              "${{github.event.repository.name}}"
+            ]
 
       - uses: peaceiris/actions-gh-pages@bd8c6b06eba6b3d25d72b7a1767993c0aeee42e7 # v3
         with:
