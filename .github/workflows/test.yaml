@@ -69,7 +69,7 @@ jobs:
     uses: aquaproj/update-checksum-workflow/.github/workflows/update-checksum.yaml@3598c506108a2e0e9e31a0c6ef9c202c77049420 # v0.1.9
     with:
       aqua_policy_config: aqua/policy.yaml
-      aqua_version: v2.21.3
+      aqua_version: v2.22.0
       prune: true
     secrets:
       gh_app_id: ${{secrets.APP_ID}}
@@ -94,7 +94,7 @@ jobs:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
       - uses: aquaproj/aqua-installer@7c7338067bdb97d5bea2acc82b5870afca470d18 # v2.3.0
         with:
-          aqua_version: v2.21.3
+          aqua_version: v2.22.0
         env:
           AQUA_GITHUB_TOKEN: ${{github.token}}
       - run: ghalint run
