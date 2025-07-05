@@ -34,7 +34,7 @@ jobs:
       - ghalint
       - build
     permissions: {}
-    if: failure()
+    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
     steps:
       - run: exit 1
 
