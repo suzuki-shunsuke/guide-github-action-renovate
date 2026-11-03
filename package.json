@@ -44,6 +44,7 @@
     "node": "24.22.2"
   },
   "overrides": {
-    "tinypool": "^2.1.2"
+    "tinypool": "^2.1.2",
+    "serialize-javascript": "^7.1.3"
   }
 }
