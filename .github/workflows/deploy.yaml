@@ -15,4 +15,6 @@ jobs:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
       contents: write
+      # Required by the notify job of release.yaml, even though it is skipped because issue_number isn't set
+      issues: write
       id-token: write
