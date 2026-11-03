@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkguide_github_action_renovate||=[]).push([[729],{827(t){t.exports=JSON.parse('{"metadata":{"permalink":"/guide-github-action-renovate/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":0,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
