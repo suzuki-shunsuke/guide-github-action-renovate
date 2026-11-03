@@ -25,7 +25,7 @@ but in other words you can merge a pull request even if jobs other than `require
 
 If you add jobs to `Status checks that are required.`, it is inconvenient when you add a new job to the workflow and `Status checks that are required.` or change job names because until you merge a pull request to add a new job to the workflow you can't merge other pull requests.
 
-Futhermore, if you don't have the permission to change GitHub Repository Settings and you have to ask someone to change them, it would be inconvenient.
+Furthermore, if you don't have the permission to change GitHub Repository Settings and you have to ask someone to change them, it would be inconvenient.
 
 So you should define a dedicated job and adding only the job to `Status checks that are required.`.
 We call this job `status-check` job.
@@ -88,7 +88,7 @@ The issue of this example is that `status-check` is skipped when some of needs j
 
 If a workflow is run only when specific files are changed, you can't add the workflow's jobs to `Status checks that are required.`, so even if the workflow fails you can merge a pull request. This is undesirable.
 
-To solve the issue, you should merge workflows for `pull_request` event to one workflow which is always triggered and add jobs to `status-check` job's `needes`. We call this workflow `one workflow`. And to run jobs only when specific files are changed, you should use [dorny/paths-filter](https://github.com/dorny/paths-filter) or similar action.
+To solve the issue, you should merge workflows for `pull_request` event to one workflow which is always triggered and add jobs to `status-check` job's `needs`. We call this workflow `one workflow`. And to run jobs only when specific files are changed, you should use [dorny/paths-filter](https://github.com/dorny/paths-filter) or similar action.
 
 e.g.
 
@@ -159,7 +159,7 @@ Then you can spread the target of auto-merge gradually.
 
 ## Test dependency updates by CI
 
-Depency updates should be tested by CI.
+Dependency updates should be tested by CI.
 Otherwise, you would miss bugs.
 Probably you already test updates your application depends on directly, but maybe you don't test other updates.
 
