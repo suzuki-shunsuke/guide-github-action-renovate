@@ -42,5 +42,8 @@
   },
   "volta": {
     "node": "24.22.2"
+  },
+  "overrides": {
+    "tinypool": "^2.1.2"
   }
 }
