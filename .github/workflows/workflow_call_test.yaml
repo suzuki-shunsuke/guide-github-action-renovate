@@ -1,5 +1,9 @@
 name: test (workflow_call)
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      TAKUMI_GUARD_BOT_ID:
+        required: false
 permissions: {}
 jobs:
   # renovate-config-validator, ghalint, and typos
@@ -12,23 +16,23 @@ jobs:
       pull-requests: read
 
   build:
-    timeout-minutes: 15
-    runs-on: ubuntu-26.04
+    uses: suzuki-shunsuke/release-doc-action/.github/workflows/test.yaml@1cb15eb99aa8f0ae05ae28174430e49579e878fa # v0.2.0
+    with:
+      working_directory: "."
+      node-version-file: package.json
+      # Build the document only if these files are changed
+      paths: |
+        docs/**
+        src/**
+        static/**
+        *.js
+        package.json
+        package-lock.json
+        .github/workflows/test.yaml
+        .github/workflows/workflow_call_test.yaml
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
+      pull-requests: read
       contents: read
-    steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
-        with:
-          persist-credentials: false
-      - name: get nested property
-        id: package_json
-        uses: notiz-dev/github-action-json-property@a5a9c668b16513c737c3e1f8956772c99c73f6e8 # v0.2.0
-        with:
-          path: package.json
-          prop_path: volta.node
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
-        with:
-          node-version: ${{steps.package_json.outputs.prop}}
-          cache: 'npm'
-      - run: npm install
-      - run: npm run build
+      id-token: write
